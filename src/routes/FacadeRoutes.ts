@@ -72,10 +72,10 @@ export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
         this._service.registerRouteWithAuth(method, route, authorize, actionCurl);
     }
 
-    public registerMiddleware(action: (req: any, res: any) => void): void {
+    public registerMiddleware(action: (req: any, res: any, next: () => void) => void): void {
 
-        let actionCurl = (req, res) => { 
-            action.call(this, req, res); 
+        let actionCurl = (req, res, next) => { 
+            action.call(this, req, res, next); 
         };
 
         this._service.registerMiddleware(actionCurl);

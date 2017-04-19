@@ -49,8 +49,8 @@ class FacadeRoutes {
         this._service.registerRouteWithAuth(method, route, authorize, actionCurl);
     }
     registerMiddleware(action) {
-        let actionCurl = (req, res) => {
-            action.call(this, req, res);
+        let actionCurl = (req, res, next) => {
+            action.call(this, req, res, next);
         };
         this._service.registerMiddleware(actionCurl);
     }

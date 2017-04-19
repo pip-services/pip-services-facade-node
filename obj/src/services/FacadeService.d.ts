@@ -2,11 +2,12 @@ import { IConfigurable } from 'pip-services-commons-node';
 import { ConfigParams } from 'pip-services-commons-node';
 import { IReferences } from 'pip-services-commons-node';
 import { IReferenceable } from 'pip-services-commons-node';
+import { CompositeLogger } from 'pip-services-commons-node';
 import { IFacadeService } from './IFacadeService';
 export declare class FacadeService implements IConfigurable, IReferenceable, IFacadeService {
     protected _rootPath: string;
     protected _partition: any;
-    protected _logger: any;
+    protected _logger: CompositeLogger;
     constructor();
     configure(config: ConfigParams): void;
     setReferences(references: IReferences): void;
