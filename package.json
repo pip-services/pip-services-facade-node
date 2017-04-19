@@ -1,6 +1,6 @@
 {
     "name": "pip-services-facade-node",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Conceptual Vision Consulting LLC",
     "description": "RESTful Client Facade for Pip.Services in Node.js",
     "contributors": [
@@ -21,11 +21,11 @@
         "type": "git",
         "url": "ssh://git@github.com:pip-services/pip-services-facade-node.git"
     },
-    "license": "Commercial",
+    "license": "MIT",
     "engines": {
         "node": ">=0.6.14"
     },
-    "private": true,
+    "private": false,
     "scripts": {
         "start": "node app",
         "test": "mocha -t 10000 -R spec -u tdd --recursive ./obj/test",

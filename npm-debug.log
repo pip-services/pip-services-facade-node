@@ -1,0 +1,104 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/7.7.2/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@4.1.2
+3 info using node@v7.7.2
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   escapedName: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/seroukhov/Projects/pip-services-node-ws/pip-services-facade-node',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/seroukhov/.npm/pip-services-facade-node/1.0.0/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/seroukhov/.npm correctMkdir not in flight; initializing
+10 info lifecycle pip-services-facade-node@1.0.0~prepublish: pip-services-facade-node@1.0.0
+11 silly lifecycle pip-services-facade-node@1.0.0~prepublish: no script for prepublish, continuing
+12 info lifecycle pip-services-facade-node@1.0.0~prepare: pip-services-facade-node@1.0.0
+13 silly lifecycle pip-services-facade-node@1.0.0~prepare: no script for prepare, continuing
+14 verbose tar pack [ '/Users/seroukhov/.npm/pip-services-facade-node/1.0.0/package.tgz',
+14 verbose tar pack   '/Users/seroukhov/Projects/pip-services-node-ws/pip-services-facade-node' ]
+15 verbose tarball /Users/seroukhov/.npm/pip-services-facade-node/1.0.0/package.tgz
+16 verbose folder /Users/seroukhov/Projects/pip-services-node-ws/pip-services-facade-node
+17 verbose addLocalTarball adding from inside cache /Users/seroukhov/.npm/pip-services-facade-node/1.0.0/package.tgz
+18 verbose correctMkdir /Users/seroukhov/.npm correctMkdir not in flight; initializing
+19 silly cache afterAdd pip-services-facade-node@1.0.0
+20 verbose afterAdd /Users/seroukhov/.npm/pip-services-facade-node/1.0.0/package/package.json not in flight; writing
+21 verbose correctMkdir /Users/seroukhov/.npm correctMkdir not in flight; initializing
+22 verbose afterAdd /Users/seroukhov/.npm/pip-services-facade-node/1.0.0/package/package.json written
+23 silly publish { name: 'pip-services-facade-node',
+23 silly publish   version: '1.0.0',
+23 silly publish   author: { name: 'Conceptual Vision Consulting LLC' },
+23 silly publish   description: 'RESTful Client Facade for Pip.Services in Node.js',
+23 silly publish   contributors: [ { name: 'Sergey Seroukhov', email: 'seroukhov@gmail.com' } ],
+23 silly publish   main: './obj/src/index.js',
+23 silly publish   typings: './obj/src/index.d.ts',
+23 silly publish   keywords: [ 'pip.services', 'rest api', 'client facade' ],
+23 silly publish   noAnalyze: true,
+23 silly publish   repository:
+23 silly publish    { type: 'git',
+23 silly publish      url: 'git+ssh://git@github.com/pip-services/pip-services-facade-node.git' },
+23 silly publish   license: 'Commercial',
+23 silly publish   engines: { node: '>=0.6.14' },
+23 silly publish   private: true,
+23 silly publish   scripts:
+23 silly publish    { start: 'node app',
+23 silly publish      test: 'mocha -t 10000 -R spec -u tdd --recursive ./obj/test',
+23 silly publish      benchmark: 'matcha -R clean -I tdd ./benchmark/run.js' },
+23 silly publish   dependencies:
+23 silly publish    { 'pip-services-commons-node': '^2.0.0',
+23 silly publish      'pip-services-container-node': '^2.0.0',
+23 silly publish      'pip-services-net-node': '^2.0.0',
+23 silly publish      express: '3.4.6',
+23 silly publish      'body-parser': '1.16.0',
+23 silly publish      cors: '2.8.1',
+23 silly publish      'get-methodoverride': '0.1.2',
+23 silly publish      'connect-timeout': '1.8.0',
+23 silly publish      'socket.io': '1.7.2' },
+23 silly publish   devDependencies:
+23 silly publish    { '@types/node': '*',
+23 silly publish      '@types/lodash': '^4.0.0',
+23 silly publish      '@types/async': '^2.0.0',
+23 silly publish      '@types/mocha': '*',
+23 silly publish      '@types/chai': '*',
+23 silly publish      mocha: '*',
+23 silly publish      chai: '*',
+23 silly publish      matcha: '*' },
+23 silly publish   readme: '# <img src="https://github.com/pip-services/pip-services/raw/master/design/Logo.png" alt="Pip.Services Logo" style="max-width:30%"> <br/> RESTful client facade for Node.js\r\n\r\nOne of the common implementation patterns is to expose microservices via single entry point called API Gateway or Client Facade.\r\nThe responsiblity of that component is to accept calls from external consumers, enforce security rules, perform authentication and authorization\r\nand when request is cleared it can call one or few microservices in a single transaction. Client Facades may also implement complex requests,\r\ncombine multiple datasets and return then in a single transaction, push notifications via async mechanisms like Socket.IO or WebSockets.\r\n\r\nThis framework is a part of [Pip.Services](https://github.com/pip-services/pip-services) project.\r\nIt provides reusable primitives to quickly build sophisticated client facades via composition of multiple routes and middleware components.\r\n\r\n- **Services** - Main and partition (subpath) facade services\r\n- **Routes** - Abstract facade route class and few generic routes\r\n- **Errors** - Error simulation\r\n\r\nQuick Links:\r\n\r\n* [Downloads](https://github.com/pip-services/pip-services-facade-node/blob/master/doc/Downloads.md)\r\n* [API Reference](http://htmlpreview.github.io/?https://github.com/pip-services/pip-services-facade-node/blob/master/doc/api/index.html)\r\n* [Building and Testing](https://github.com/pip-services/pip-services-facade-node/blob/master/doc/Development.md)\r\n* [Contributing](https://github.com/pip-services/pip-services-facade-node/blob/master/doc/Development.md/#contrib)\r\n\r\n## Acknowledgements\r\n\r\nThe Node.js version of Pip.Services is created and maintained by **Sergey Seroukhov**\r\n',
+23 silly publish   readmeFilename: 'README.md',
+23 silly publish   gitHead: 'e9fdbf97486d34a41274366e68ae0074bf3b6af3',
+23 silly publish   bugs: { url: 'https://github.com/pip-services/pip-services-facade-node/issues' },
+23 silly publish   homepage: 'https://github.com/pip-services/pip-services-facade-node#readme',
+23 silly publish   _id: 'pip-services-facade-node@1.0.0',
+23 silly publish   _shasum: '5ccf94a452d8dac1c2ece33921b95aae7519cc97',
+23 silly publish   _from: '.' }
+24 info lifecycle pip-services-facade-node@1.0.0~prepublishOnly: pip-services-facade-node@1.0.0
+25 silly lifecycle pip-services-facade-node@1.0.0~prepublishOnly: no script for prepublishOnly, continuing
+26 verbose getPublishConfig undefined
+27 verbose stack Error: This package has been marked as private
+27 verbose stack Remove the 'private' field from the package.json to publish it.
+27 verbose stack     at publish_ (/usr/local/lib/node_modules/npm/lib/publish.js:102:15)
+27 verbose stack     at Array.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/slide/lib/bind-actor.js:15:8)
+27 verbose stack     at LOOP (/usr/local/lib/node_modules/npm/node_modules/slide/lib/chain.js:15:14)
+27 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/slide/lib/chain.js:18:7
+27 verbose stack     at done (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:132:5)
+27 verbose stack     at LOOP (/usr/local/lib/node_modules/npm/node_modules/slide/lib/chain.js:7:26)
+27 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/slide/lib/chain.js:18:7
+27 verbose stack     at /usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:318:20
+27 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/graceful-fs/polyfills.js:284:29
+27 verbose stack     at FSReqWrap.oncomplete (fs.js:114:15)
+28 verbose cwd /Users/seroukhov/Projects/pip-services-node-ws/pip-services-facade-node
+29 error Darwin 16.5.0
+30 error argv "/usr/local/Cellar/node/7.7.2/bin/node" "/usr/local/bin/npm" "publish"
+31 error node v7.7.2
+32 error npm  v4.1.2
+33 error This package has been marked as private
+33 error Remove the 'private' field from the package.json to publish it.
+34 error If you need help, you may report this error at:
+34 error     <https://github.com/npm/npm/issues>
+35 verbose exit [ 1, true ]
