@@ -1,0 +1,37 @@
+import { IConfigurable } from 'pip-services-commons-node';
+import { ConfigParams } from 'pip-services-commons-node';
+import { IReferences } from 'pip-services-commons-node';
+import { IReferenceable } from 'pip-services-commons-node';
+import { CompositeLogger } from 'pip-services-commons-node';
+import { CompositeCounters } from 'pip-services-commons-node';
+import { DependencyResolver } from 'pip-services-commons-node';
+import { IFacadeService } from '../services/IFacadeService';
+export declare abstract class FacadeRoutes implements IConfigurable, IReferenceable {
+    private static readonly _defaultConfig;
+    protected _logger: CompositeLogger;
+    protected _counters: CompositeCounters;
+    protected _dependencyResolver: DependencyResolver;
+    protected _service: IFacadeService;
+    constructor();
+    configure(config: ConfigParams): void;
+    setReferences(references: IReferences): void;
+    protected instrument(correlationId: string, method: string, route: string): void;
+    registerRoute(method: string, route: string, action: (req: any, res: any) => void): void;
+    registerRouteWithAuth(method: string, route: string, authorize: (req: any, res: any, next: () => void) => void, action: (req: any, res: any) => void): void;
+    registerMiddleware(method: string, action: (req: any, res: any) => void): void;
+    protected abstract register(): void;
+    protected getCorrelationId(req: any): any;
+    protected getFilterParams(req: any): any;
+    protected getPagingParams(req: any): any;
+    protected sendResult(req: any, res: any): (err: any, result: any) => void;
+    protected sendCreatedResult(req: any, res: any): (err: any, result: any) => void;
+    protected sendDeletedResult(req: any, res: any): (err: any, result: any) => void;
+    protected sendError(req: any, res: any, error: any): void;
+    protected sendBadRequest(req: any, res: any, message: string): void;
+    protected sendUnauthorized(req: any, res: any, message: string): void;
+    protected sendNotFound(req: any, res: any, message: string): void;
+    protected sendConflict(req: any, res: any, message: string): void;
+    protected sendSessionExpired(req: any, res: any, message: string): void;
+    protected sendInternalError(req: any, res: any, message: string): void;
+    protected sendServerUnavailable(req: any, res: any, message: string): void;
+}
