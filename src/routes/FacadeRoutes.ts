@@ -90,13 +90,9 @@ export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
     }
 
     protected getFilterParams(req: any): FilterParams {
-        let filter = FilterParams.fromValue(req.query);
-
-        // Remove paging params
-        filter.delete('skip');
-        filter.delete('take');
-        filter.delete('total');
-
+        let filter = FilterParams.fromValue(
+            _.omit(req.query, 'skip', 'take', 'total')
+        );
         return filter;
     }
 

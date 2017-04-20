@@ -60,11 +60,7 @@ class FacadeRoutes {
         return req.params.correlation_id;
     }
     getFilterParams(req) {
-        let filter = pip_services_commons_node_2.FilterParams.fromValue(req.query);
-        // Remove paging params
-        filter.delete('skip');
-        filter.delete('take');
-        filter.delete('total');
+        let filter = pip_services_commons_node_2.FilterParams.fromValue(_.omit(req.query, 'skip', 'take', 'total'));
         return filter;
     }
     getPagingParams(req) {
