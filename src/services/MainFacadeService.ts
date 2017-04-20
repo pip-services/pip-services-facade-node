@@ -65,7 +65,7 @@ export class MainFacadeService extends FacadeService implements IOpenable {
         this._connectionResolver.configure(config);
         this._credentialResolver.configure(config);
 
-        this._rootPath = config.getAsStringWithDefault('options.root_path', this._rootPath);
+        this._rootPath = config.getAsStringWithDefault('root_path', this._rootPath);
         if (this._rootPath.length > 0 && !this._rootPath.startsWith('/'))
                 this._rootPath = '/' + this._rootPath;
 

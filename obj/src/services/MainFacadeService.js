@@ -35,7 +35,7 @@ class MainFacadeService extends FacadeService_1.FacadeService {
         config = config.setDefaults(MainFacadeService._defaultConfig);
         this._connectionResolver.configure(config);
         this._credentialResolver.configure(config);
-        this._rootPath = config.getAsStringWithDefault('options.root_path', this._rootPath);
+        this._rootPath = config.getAsStringWithDefault('root_path', this._rootPath);
         if (this._rootPath.length > 0 && !this._rootPath.startsWith('/'))
             this._rootPath = '/' + this._rootPath;
         this._debug = config.getAsBooleanWithDefault('options.debug', this._debug);
