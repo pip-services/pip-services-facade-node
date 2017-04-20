@@ -92,19 +92,15 @@ class MainFacadeService extends FacadeService_1.FacadeService {
         ], callback);
     }
     close(correlationId, callback) {
-        // Exit if already closed
-        if (this._http == null) {
-            if (callback)
-                callback(null);
-            return;
+        if (this._http != null) {
+            this._http.close((err) => {
+                this._logger.info(correlationId, 'Closed HTTP server');
+            });
         }
-        this._http.close((err) => {
-            this._http = null;
-            this._server = null;
-            this._logger.info(correlationId, 'Closed HTTP server');
-            if (callback)
-                callback(null);
-        });
+        this._http = null;
+        this._server = null;
+        if (callback)
+            callback(null);
     }
     getConnection(correlationId, callback) {
         this._connectionResolver.resolve(correlationId, (err, con) => {

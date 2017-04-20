@@ -128,19 +128,16 @@ export class MainFacadeService extends FacadeService implements IOpenable {
     }
 
     public close(correlationId: string, callback?: (err: any) => void): void {
-        // Exit if already closed
-        if (this._http == null) {
-            if (callback) callback(null);
-            return;
+        if (this._http != null) {
+            this._http.close((err) => {
+                this._logger.info(correlationId, 'Closed HTTP server');            
+            });
         }
 
-        this._http.close((err) => {
-            this._http = null;
-            this._server = null;
-            this._logger.info(correlationId, 'Closed HTTP server');
-            
-            if (callback) callback(null);
-        });
+        this._http = null;
+        this._server = null;
+
+        if (callback) callback(null);
     }
 
 	protected getConnection(correlationId: string, callback: (err: any, result: ConnectionParams) => void): void {
