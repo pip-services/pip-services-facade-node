@@ -4,6 +4,8 @@ import { IConfigurable } from 'pip-services-commons-node';
 import { ConfigParams } from 'pip-services-commons-node';
 import { IReferences } from 'pip-services-commons-node';
 import { IReferenceable } from 'pip-services-commons-node';
+import { FilterParams } from 'pip-services-commons-node';
+import { PagingParams } from 'pip-services-commons-node';
 import { CompositeLogger } from 'pip-services-commons-node';
 import { CompositeCounters } from 'pip-services-commons-node';
 import { DependencyResolver } from 'pip-services-commons-node';
@@ -87,19 +89,19 @@ export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
         return req.params.correlation_id;
     }
 
-    protected getFilterParams(req: any): any {
-        // Todo: Complete implementation
-        return req.query;
+    protected getFilterParams(req: any): FilterParams {
+        let filter = FilterParams.fromValue(req.query);
+
+        // Remove paging params
+        filter.delete('skip');
+        filter.delete('take');
+        filter.delete('total');
+
+        return filter;
     }
 
-    protected getPagingParams(req: any): any {
-        let paging: any = {};
-        if (req.query.skip)
-            paging.skip = parseInt(req.query.skip);
-        if (req.query.take)
-            paging.take = parseInt(req.query.take);
-        if (req.query.paging)
-            paging.paging = req.query.paging;
+    protected getPagingParams(req: any): PagingParams {
+        let paging = PagingParams.fromValue(req.query);
         return paging;
     }
 

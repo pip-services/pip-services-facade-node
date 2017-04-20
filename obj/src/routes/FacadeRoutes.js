@@ -10,12 +10,14 @@ const pip_services_commons_node_6 = require("pip-services-commons-node");
 const pip_services_commons_node_7 = require("pip-services-commons-node");
 const pip_services_commons_node_8 = require("pip-services-commons-node");
 const pip_services_commons_node_9 = require("pip-services-commons-node");
+const pip_services_commons_node_10 = require("pip-services-commons-node");
+const pip_services_commons_node_11 = require("pip-services-commons-node");
 const pip_services_net_node_1 = require("pip-services-net-node");
 class FacadeRoutes {
     constructor() {
-        this._logger = new pip_services_commons_node_2.CompositeLogger();
-        this._counters = new pip_services_commons_node_3.CompositeCounters();
-        this._dependencyResolver = new pip_services_commons_node_4.DependencyResolver(FacadeRoutes._defaultConfig);
+        this._logger = new pip_services_commons_node_4.CompositeLogger();
+        this._counters = new pip_services_commons_node_5.CompositeCounters();
+        this._dependencyResolver = new pip_services_commons_node_6.DependencyResolver(FacadeRoutes._defaultConfig);
     }
     configure(config) {
         config = config.setDefaults(FacadeRoutes._defaultConfig);
@@ -58,17 +60,15 @@ class FacadeRoutes {
         return req.params.correlation_id;
     }
     getFilterParams(req) {
-        // Todo: Complete implementation
-        return req.query;
+        let filter = pip_services_commons_node_2.FilterParams.fromValue(req.query);
+        // Remove paging params
+        filter.delete('skip');
+        filter.delete('take');
+        filter.delete('total');
+        return filter;
     }
     getPagingParams(req) {
-        let paging = {};
-        if (req.query.skip)
-            paging.skip = parseInt(req.query.skip);
-        if (req.query.take)
-            paging.take = parseInt(req.query.take);
-        if (req.query.paging)
-            paging.paging = req.query.paging;
+        let paging = pip_services_commons_node_3.PagingParams.fromValue(req.query);
         return paging;
     }
     sendResult(req, res) {
@@ -85,38 +85,38 @@ class FacadeRoutes {
     }
     sendBadRequest(req, res, message) {
         let correlationId = this.getCorrelationId(req);
-        let error = new pip_services_commons_node_5.BadRequestException(correlationId, 'BAD_REQUEST', message);
+        let error = new pip_services_commons_node_7.BadRequestException(correlationId, 'BAD_REQUEST', message);
         this.sendError(req, res, error);
     }
     sendUnauthorized(req, res, message) {
         let correlationId = this.getCorrelationId(req);
-        let error = new pip_services_commons_node_6.UnauthorizedException(correlationId, 'UNAUTHORIZED', message);
+        let error = new pip_services_commons_node_8.UnauthorizedException(correlationId, 'UNAUTHORIZED', message);
         this.sendError(req, res, error);
     }
     sendNotFound(req, res, message) {
         let correlationId = this.getCorrelationId(req);
-        let error = new pip_services_commons_node_7.NotFoundException(correlationId, 'NOT_FOUND', message);
+        let error = new pip_services_commons_node_9.NotFoundException(correlationId, 'NOT_FOUND', message);
         this.sendError(req, res, error);
     }
     sendConflict(req, res, message) {
         let correlationId = this.getCorrelationId(req);
-        let error = new pip_services_commons_node_8.ConflictException(correlationId, 'CONFLICT', message);
+        let error = new pip_services_commons_node_10.ConflictException(correlationId, 'CONFLICT', message);
         this.sendError(req, res, error);
     }
     sendSessionExpired(req, res, message) {
         let correlationId = this.getCorrelationId(req);
-        let error = new pip_services_commons_node_9.UnknownException(correlationId, 'SESSION_EXPIRED', message);
+        let error = new pip_services_commons_node_11.UnknownException(correlationId, 'SESSION_EXPIRED', message);
         error.status = 440;
         this.sendError(req, res, error);
     }
     sendInternalError(req, res, message) {
         let correlationId = this.getCorrelationId(req);
-        let error = new pip_services_commons_node_9.UnknownException(correlationId, 'INTERNAL', message);
+        let error = new pip_services_commons_node_11.UnknownException(correlationId, 'INTERNAL', message);
         this.sendError(req, res, error);
     }
     sendServerUnavailable(req, res, message) {
         let correlationId = this.getCorrelationId(req);
-        let error = new pip_services_commons_node_8.ConflictException(correlationId, 'SERVER_UNAVAILABLE', message);
+        let error = new pip_services_commons_node_10.ConflictException(correlationId, 'SERVER_UNAVAILABLE', message);
         error.status = 503;
         this.sendError(req, res, error);
     }
