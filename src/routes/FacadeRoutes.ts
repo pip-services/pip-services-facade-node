@@ -97,7 +97,9 @@ export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
     }
 
     protected getPagingParams(req: any): PagingParams {
-        let paging = PagingParams.fromValue(req.query);
+        let paging = PagingParams.fromValue(
+            _.pick(req.query, 'skip', 'take', 'total')
+        );
         return paging;
     }
 

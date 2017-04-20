@@ -64,7 +64,7 @@ class FacadeRoutes {
         return filter;
     }
     getPagingParams(req) {
-        let paging = pip_services_commons_node_3.PagingParams.fromValue(req.query);
+        let paging = pip_services_commons_node_3.PagingParams.fromValue(_.pick(req.query, 'skip', 'take', 'total'));
         return paging;
     }
     sendResult(req, res) {
