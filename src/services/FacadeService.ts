@@ -7,12 +7,14 @@ import { IReferences } from 'pip-services-commons-node';
 import { IReferenceable } from 'pip-services-commons-node';
 import { IOpenable } from 'pip-services-commons-node';
 import { CompositeLogger } from 'pip-services-commons-node';
+import { DependencyResolver } from 'pip-services-commons-node';
 
 import { IFacadeService } from './IFacadeService';
 
 export class FacadeService implements IConfigurable, IReferenceable, IFacadeService {
     protected _rootPath: string = '';
     protected _partition: any =  express();
+    protected _dependencyResolver: DependencyResolver = new DependencyResolver();
     protected _logger = new CompositeLogger();
 
     public constructor() {}
@@ -24,6 +26,7 @@ export class FacadeService implements IConfigurable, IReferenceable, IFacadeServ
     }
 
     public setReferences(references: IReferences): void {
+        this._dependencyResolver.setReferences(references);
         this._logger.setReferences(references);
     }
 

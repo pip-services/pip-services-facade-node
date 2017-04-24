@@ -6,6 +6,7 @@ Initial public release
 
 ### Features
 - **routes** - Added sendEmptyResult() to FacadeRoutes
+- **services** - Added logging to event log
 
 ## <a name="1.0.0"></a> 1.0.0 (2017-04-18)
 
