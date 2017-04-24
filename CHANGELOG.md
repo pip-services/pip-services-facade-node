@@ -5,8 +5,15 @@
 Initial public release
 
 ### Features
-- **Services** - Main and partition (subpath) facade services
-- **Routes** - Abstract facade route class and few generic routes
+- **routes** - Added sendEmptyResult() to FacadeRoutes
+
+## <a name="1.0.0"></a> 1.0.0 (2017-04-18)
+
+Initial public release
+
+### Features
+- **services** - Main and partition (subpath) facade services
+- **routes** - Abstract facade route class and few generic routes
 
 ### Bug Fixes
 No fixes in this version

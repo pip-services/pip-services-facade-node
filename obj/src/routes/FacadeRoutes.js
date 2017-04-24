@@ -70,6 +70,9 @@ class FacadeRoutes {
     sendResult(req, res) {
         return pip_services_net_node_1.HttpResponseSender.sendResult(req, res);
     }
+    sendEmptyResult(req, res) {
+        return pip_services_net_node_1.HttpResponseSender.sendEmptyResult(req, res);
+    }
     sendCreatedResult(req, res) {
         return pip_services_net_node_1.HttpResponseSender.sendCreatedResult(req, res);
     }

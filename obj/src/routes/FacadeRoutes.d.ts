@@ -26,6 +26,7 @@ export declare abstract class FacadeRoutes implements IConfigurable, IReferencea
     protected getFilterParams(req: any): FilterParams;
     protected getPagingParams(req: any): PagingParams;
     protected sendResult(req: any, res: any): (err: any, result: any) => void;
+    protected sendEmptyResult(req: any, res: any): (err: any, result: any) => void;
     protected sendCreatedResult(req: any, res: any): (err: any, result: any) => void;
     protected sendDeletedResult(req: any, res: any): (err: any, result: any) => void;
     protected sendError(req: any, res: any, error: any): void;

@@ -107,6 +107,10 @@ export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
         return HttpResponseSender.sendResult(req, res);
     }
 
+    protected sendEmptyResult(req, res): (err: any, result: any) => void {
+        return HttpResponseSender.sendEmptyResult(req, res);
+    }
+
     protected sendCreatedResult(req, res): (err: any, result: any) => void {
         return HttpResponseSender.sendCreatedResult(req, res);
     }
