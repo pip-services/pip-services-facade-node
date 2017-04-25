@@ -19,6 +19,7 @@ export class PartitionFacadeService extends FacadeService {
     }
 
     public setReferences(references: IReferences): void {
+        super.setReferences(references);
         this._parent = this._dependencyResolver.getOneRequired<IFacadeService>('parent');
         this._parent.registerMiddlewareForPath(this._rootPath, this._partition);
     }
