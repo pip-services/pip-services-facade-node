@@ -1,37 +1,25 @@
-let _ = require('lodash');
-
 import { IConfigurable } from 'pip-services-commons-node';
 import { ConfigParams } from 'pip-services-commons-node';
+import { Descriptor } from 'pip-services-commons-node';
 import { IReferences } from 'pip-services-commons-node';
 import { IReferenceable } from 'pip-services-commons-node';
-import { FilterParams } from 'pip-services-commons-node';
-import { PagingParams } from 'pip-services-commons-node';
 import { CompositeLogger } from 'pip-services-commons-node';
 import { CompositeCounters } from 'pip-services-commons-node';
 import { DependencyResolver } from 'pip-services-commons-node';
-import { BadRequestException } from 'pip-services-commons-node';
-import { UnauthorizedException } from 'pip-services-commons-node';
-import { NotFoundException } from 'pip-services-commons-node';
-import { ConflictException } from 'pip-services-commons-node';
-import { UnknownException } from 'pip-services-commons-node';
-import { HttpResponseSender } from 'pip-services-net-node';
 
 import { IFacadeService } from '../services/IFacadeService';
 
 export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
-    private static readonly _defaultConfig = ConfigParams.fromTuples(
-        'dependencies.service', 'pip-services-facade:service:*:*:*' 
-    );
-
     protected _logger = new CompositeLogger();
     protected _counters = new CompositeCounters();
-    protected _dependencyResolver = new DependencyResolver(FacadeRoutes._defaultConfig);
+    protected _dependencyResolver = new DependencyResolver();
     protected _service: IFacadeService;
 
-    public constructor() {}
+    public constructor() {
+        this._dependencyResolver.put("service", new Descriptor("pip-services-facade", "service", "*", "*", "*"))
+    }
 
     public configure(config: ConfigParams): void {
-        config = config.setDefaults(FacadeRoutes._defaultConfig);
         this._dependencyResolver.configure(config);
     }
 
@@ -44,10 +32,14 @@ export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
         this.register();
     }
 
-	protected instrument(correlationId: string, method: string, route: string): void {
+	private instrument(correlationId: string, method: string, route: string): void {
 		this._logger.debug(correlationId, "Calling %s %s", method, route);
 		this._counters.incrementOne(route + "." + method + ".calls");
 	}
+
+    private getCorrelationId(req: any): any {
+        return req.params.correlation_id;
+    }
 
     public registerRoute(method: string, route: string, 
         action: (req: any, res: any) => void): void {
@@ -84,87 +76,5 @@ export abstract class FacadeRoutes implements IConfigurable, IReferenceable {
     }
 
     protected abstract register(): void;
-
-    protected getCorrelationId(req: any): any {
-        return req.params.correlation_id;
-    }
-
-    protected getFilterParams(req: any): FilterParams {
-        let filter = FilterParams.fromValue(
-            _.omit(req.query, 'skip', 'take', 'total')
-        );
-        return filter;
-    }
-
-    protected getPagingParams(req: any): PagingParams {
-        let paging = PagingParams.fromValue(
-            _.pick(req.query, 'skip', 'take', 'total')
-        );
-        return paging;
-    }
-
-    protected sendResult(req, res): (err: any, result: any) => void {
-        return HttpResponseSender.sendResult(req, res);
-    }
-
-    protected sendEmptyResult(req, res): (err: any, result: any) => void {
-        return HttpResponseSender.sendEmptyResult(req, res);
-    }
-
-    protected sendCreatedResult(req, res): (err: any, result: any) => void {
-        return HttpResponseSender.sendCreatedResult(req, res);
-    }
-
-    protected sendDeletedResult(req, res): (err: any, result: any) => void {
-        return HttpResponseSender.sendDeletedResult(req, res);
-    }
-
-    protected sendError(req, res, error): void {
-        HttpResponseSender.sendError(req, res, error);
-    }
-
-    protected sendBadRequest(req: any, res: any, message: string): void {
-        let correlationId = this.getCorrelationId(req);
-        let error = new BadRequestException(correlationId, 'BAD_REQUEST', message);
-        this.sendError(req, res, error);
-    }
-
-    protected sendUnauthorized(req: any, res: any, message: string): void  {
-        let correlationId = this.getCorrelationId(req);
-        let error = new UnauthorizedException(correlationId, 'UNAUTHORIZED', message);
-        this.sendError(req, res, error);
-    }
-
-    protected sendNotFound(req: any, res: any, message: string): void  {
-        let correlationId = this.getCorrelationId(req);
-        let error = new NotFoundException(correlationId, 'NOT_FOUND', message);
-        this.sendError(req, res, error);
-    }
-
-    protected sendConflict(req: any, res: any, message: string): void  {
-        let correlationId = this.getCorrelationId(req);
-        let error = new ConflictException(correlationId, 'CONFLICT', message);
-        this.sendError(req, res, error);
-    }
-
-    protected sendSessionExpired(req: any, res: any, message: string): void  {
-        let correlationId = this.getCorrelationId(req);
-        let error = new UnknownException(correlationId, 'SESSION_EXPIRED', message);
-        error.status = 440;
-        this.sendError(req, res, error);
-    }
-
-    protected sendInternalError(req: any, res: any, message: string): void  {
-        let correlationId = this.getCorrelationId(req);
-        let error = new UnknownException(correlationId, 'INTERNAL', message);
-        this.sendError(req, res, error);
-    }
-
-    protected sendServerUnavailable(req: any, res: any, message: string): void  {
-        let correlationId = this.getCorrelationId(req);
-        let error = new ConflictException(correlationId, 'SERVER_UNAVAILABLE', message);
-        error.status = 503;
-        this.sendError(req, res, error);
-    }
 
 }

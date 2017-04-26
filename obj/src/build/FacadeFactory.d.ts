@@ -6,6 +6,6 @@ export declare class FacadeFactory extends Factory {
     static PartitionFacadeServiceDescriptor: Descriptor;
     static AuthManagerDescriptor: Descriptor;
     static SessionManagerDescriptor: Descriptor;
-    static AboutRoutesDescriptor: Descriptor;
+    static AboutOperationsDescriptor: Descriptor;
     constructor();
 }

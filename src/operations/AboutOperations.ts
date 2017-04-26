@@ -5,9 +5,9 @@ import { Descriptor } from 'pip-services-commons-node';
 import { ContainerInfo } from 'pip-services-container-node';
 import { HttpRequestDetector } from 'pip-services-net-node';
 
-import { FacadeRoutes } from './FacadeRoutes';
+import { FacadeOperations } from './FacadeOperations';
 
-export class AboutRoutes extends FacadeRoutes {
+export class AboutOperations extends FacadeOperations {
     private _containerInfo: ContainerInfo;
 
     public setReferences(references: IReferences): void {
@@ -16,10 +16,6 @@ export class AboutRoutes extends FacadeRoutes {
         this._containerInfo = references.getOneOptional<ContainerInfo>(
             new Descriptor('pip-services-container', 'container-info', '*', '*', '*')
         );
-    }
-
-    protected register(): void {
-        this.registerRoute('get', '/about', this.getAbout);
     }
 
     private getNetworkAddresses(): string[] {
@@ -36,7 +32,7 @@ export class AboutRoutes extends FacadeRoutes {
         return addresses;
     }
 
-    private getAbout(req, res) {
+    public getAbout(req, res) {
         let about = {
             server: {
                 name: this._containerInfo != null ? this._containerInfo.name : 'unknown',

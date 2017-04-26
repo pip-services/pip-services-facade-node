@@ -3,14 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let os = require('os');
 const pip_services_commons_node_1 = require("pip-services-commons-node");
 const pip_services_net_node_1 = require("pip-services-net-node");
-const FacadeRoutes_1 = require("./FacadeRoutes");
-class AboutRoutes extends FacadeRoutes_1.FacadeRoutes {
+const FacadeOperations_1 = require("./FacadeOperations");
+class AboutOperations extends FacadeOperations_1.FacadeOperations {
     setReferences(references) {
         super.setReferences(references);
         this._containerInfo = references.getOneOptional(new pip_services_commons_node_1.Descriptor('pip-services-container', 'container-info', '*', '*', '*'));
-    }
-    register() {
-        this.registerRoute('get', '/about', this.getAbout);
     }
     getNetworkAddresses() {
         let interfaces = os.networkInterfaces();
@@ -50,5 +47,5 @@ class AboutRoutes extends FacadeRoutes_1.FacadeRoutes {
         res.json(about);
     }
 }
-exports.AboutRoutes = AboutRoutes;
-//# sourceMappingURL=AboutRoutes.js.map
+exports.AboutOperations = AboutOperations;
+//# sourceMappingURL=AboutOperations.js.map
