@@ -18,6 +18,12 @@ export class AboutOperations extends FacadeOperations {
         );
     }
 
+    public getAboutCurl() {
+        return (req, res) => {
+            this.getAbout(req, res);
+        };
+    }
+
     private getNetworkAddresses(): string[] {
         let interfaces = os.networkInterfaces();
         let addresses: string[] = [];
@@ -32,7 +38,7 @@ export class AboutOperations extends FacadeOperations {
         return addresses;
     }
 
-    public getAbout(req, res) {
+    private getAbout(req, res) {
         let about = {
             server: {
                 name: this._containerInfo != null ? this._containerInfo.name : 'unknown',
