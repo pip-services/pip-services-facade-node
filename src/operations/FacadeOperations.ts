@@ -55,7 +55,7 @@ export abstract class FacadeOperations implements IConfigurable, IReferenceable 
         return HttpResponseSender.sendResult(req, res);
     }
 
-    protected sendEmptyResult(req, res): (err: any, result: any) => void {
+    protected sendEmptyResult(req, res): (err: any) => void {
         return HttpResponseSender.sendEmptyResult(req, res);
     }
 

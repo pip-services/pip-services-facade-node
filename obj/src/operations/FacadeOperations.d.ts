@@ -18,7 +18,7 @@ export declare abstract class FacadeOperations implements IConfigurable, IRefere
     protected getFilterParams(req: any): FilterParams;
     protected getPagingParams(req: any): PagingParams;
     protected sendResult(req: any, res: any): (err: any, result: any) => void;
-    protected sendEmptyResult(req: any, res: any): (err: any, result: any) => void;
+    protected sendEmptyResult(req: any, res: any): (err: any) => void;
     protected sendCreatedResult(req: any, res: any): (err: any, result: any) => void;
     protected sendDeletedResult(req: any, res: any): (err: any, result: any) => void;
     protected sendError(req: any, res: any, error: any): void;
