@@ -15,9 +15,13 @@ class PartitionFacadeService extends FacadeService_1.FacadeService {
         super.setReferences(references);
         this._parent = this._dependencyResolver.getOneRequired('parent');
         this._parent.registerMiddlewareForPath(this._rootPath, this._partition);
+        this.register();
     }
     getRootPath() {
         return this._parent.getRootPath() + this._rootPath;
+    }
+    register() {
+        // Override in child classes
     }
 }
 exports.PartitionFacadeService = PartitionFacadeService;

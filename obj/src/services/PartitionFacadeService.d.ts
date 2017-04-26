@@ -8,4 +8,5 @@ export declare class PartitionFacadeService extends FacadeService {
     configure(config: ConfigParams): void;
     setReferences(references: IReferences): void;
     getRootPath(): string;
+    protected register(): void;
 }

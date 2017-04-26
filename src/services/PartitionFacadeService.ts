@@ -22,10 +22,15 @@ export class PartitionFacadeService extends FacadeService {
         super.setReferences(references);
         this._parent = this._dependencyResolver.getOneRequired<IFacadeService>('parent');
         this._parent.registerMiddlewareForPath(this._rootPath, this._partition);
+        this.register();
     }
 
     public getRootPath(): string {
         return this._parent.getRootPath() + this._rootPath;
+    }
+
+    protected register(): void {
+        // Override in child classes
     }
 
 }
