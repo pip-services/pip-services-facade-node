@@ -1,12 +1,17 @@
 # RESTful Client Facade for Pip.Services in Node.js Changelog
 
+## <a name="1.1.0"></a> 1.1.0 (2017-04-24)
+
+### Features
+- **routes** - Split Routes and Operations abstractions
+
 ## <a name="1.0.0"></a> 1.0.0 (2017-04-18)
 
 Initial public release
 
 ### Features
-- **Services** - Main and partition (subpath) facade services
-- **Routes** - Abstract facade route class and few generic routes
+- **services** - Main and partition (subpath) facade services
+- **routes** - Abstract facade route class and few generic routes
 
 ### Bug Fixes
 No fixes in this version

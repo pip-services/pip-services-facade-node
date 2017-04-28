@@ -1,9 +1,9 @@
 import { IReferences } from 'pip-services-commons-node';
-import { FacadeRoutes } from './FacadeRoutes';
-export declare class AboutRoutes extends FacadeRoutes {
+import { FacadeOperations } from './FacadeOperations';
+export declare class AboutOperations extends FacadeOperations {
     private _containerInfo;
     setReferences(references: IReferences): void;
-    protected register(): void;
+    getAboutCurl(): (req: any, res: any) => void;
     private getNetworkAddresses();
     private getAbout(req, res);
 }

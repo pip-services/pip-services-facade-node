@@ -9,21 +9,27 @@ let https = require('https');
 let connectTimeout = require('connect-timeout');
 let getoverride = require('get-methodoverride');
 let cors = require('cors');
+let os = require('os');
 const pip_services_commons_node_1 = require("pip-services-commons-node");
 const pip_services_commons_node_2 = require("pip-services-commons-node");
 const pip_services_commons_node_3 = require("pip-services-commons-node");
 const pip_services_commons_node_4 = require("pip-services-commons-node");
+const pip_services_commons_node_5 = require("pip-services-commons-node");
+const pip_clients_eventlog_node_1 = require("pip-clients-eventlog-node");
+const pip_clients_eventlog_node_2 = require("pip-clients-eventlog-node");
+const pip_clients_eventlog_node_3 = require("pip-clients-eventlog-node");
 const FacadeService_1 = require("./FacadeService");
 class MainFacadeService extends FacadeService_1.FacadeService {
     constructor() {
         super();
-        this._connectionResolver = new pip_services_commons_node_2.ConnectionResolver();
-        this._credentialResolver = new pip_services_commons_node_3.CredentialResolver();
+        this._connectionResolver = new pip_services_commons_node_3.ConnectionResolver();
+        this._credentialResolver = new pip_services_commons_node_4.CredentialResolver();
         this._debug = true;
         this._maintenance_enabled = false;
         this._maxSockets = 50;
         this._maxReqSize = '1mb';
         this._rootPath = '';
+        this._dependencyResolver.put('eventlog', new pip_services_commons_node_2.Descriptor('pip-services-eventlog', 'client', '*', '*', '1.0'));
     }
     isMaintenanceEnabled() {
         return this._maintenance_enabled;
@@ -35,7 +41,7 @@ class MainFacadeService extends FacadeService_1.FacadeService {
         config = config.setDefaults(MainFacadeService._defaultConfig);
         this._connectionResolver.configure(config);
         this._credentialResolver.configure(config);
-        this._rootPath = config.getAsStringWithDefault('options.root_path', this._rootPath);
+        this._rootPath = config.getAsStringWithDefault('root_path', this._rootPath);
         if (this._rootPath.length > 0 && !this._rootPath.startsWith('/'))
             this._rootPath = '/' + this._rootPath;
         this._debug = config.getAsBooleanWithDefault('options.debug', this._debug);
@@ -47,6 +53,7 @@ class MainFacadeService extends FacadeService_1.FacadeService {
         super.setReferences(references);
         this._connectionResolver.setReferences(references);
         this._credentialResolver.setReferences(references);
+        this._eventLogClient = this._dependencyResolver.getOneOptional('eventlog');
     }
     isOpened() {
         return this._http != null;
@@ -76,14 +83,21 @@ class MainFacadeService extends FacadeService_1.FacadeService {
             (callback) => {
                 this._server = this.createServer();
                 this._http = this.createHttp(this._server, connection, credential);
+                let host = os.hostname();
                 let port = connection.getPort();
                 this._http.listen(port, (err) => {
                     if (err) {
                         this._http = null;
-                        this._logger.error(correlationId, err, 'Failed to start HTTP server on port %d', port);
+                        this._logger.error(correlationId, err, 'Failed to start HTTP server at %s:%d', host, port);
+                        if (this._eventLogClient) {
+                            this._eventLogClient.logEvent(correlationId, new pip_clients_eventlog_node_1.SystemEventV1(correlationId, host, pip_clients_eventlog_node_2.EventLogTypeV1.Failure, pip_clients_eventlog_node_3.EventLogSeverityV1.Critical, "Failed to start client facade at " + host + ":" + port), null);
+                        }
                     }
                     else {
-                        this._logger.info(correlationId, 'Started HTTP server on port %d', port);
+                        this._logger.info(correlationId, 'Started HTTP server %s:%d', host, port);
+                        if (this._eventLogClient) {
+                            this._eventLogClient.logEvent(correlationId, new pip_clients_eventlog_node_1.SystemEventV1(correlationId, host, pip_clients_eventlog_node_2.EventLogTypeV1.Restart, pip_clients_eventlog_node_3.EventLogSeverityV1.Informational, "Started client facade at " + host + ":" + port), null);
+                        }
                     }
                     if (callback)
                         callback(err);
@@ -92,41 +106,37 @@ class MainFacadeService extends FacadeService_1.FacadeService {
         ], callback);
     }
     close(correlationId, callback) {
-        // Exit if already closed
-        if (this._http == null) {
-            if (callback)
-                callback(null);
-            return;
+        if (this._http != null) {
+            this._http.close((err) => {
+                this._logger.info(correlationId, 'Closed HTTP server');
+            });
         }
-        this._http.close((err) => {
-            this._http = null;
-            this._server = null;
-            this._logger.info(correlationId, 'Closed HTTP server');
-            if (callback)
-                callback(null);
-        });
+        this._http = null;
+        this._server = null;
+        if (callback)
+            callback(null);
     }
     getConnection(correlationId, callback) {
         this._connectionResolver.resolve(correlationId, (err, con) => {
             let connection = con;
             // Check for connection
             if (connection == null) {
-                err = new pip_services_commons_node_4.ConfigException(correlationId, "NO_CONNECTION", "Connection for REST client is not defined");
+                err = new pip_services_commons_node_5.ConfigException(correlationId, "NO_CONNECTION", "Connection for REST client is not defined");
             }
             else {
                 // Check for type
                 let protocol = connection.getProtocol("http");
                 if ("http" != protocol && "https" != protocol) {
-                    err = new pip_services_commons_node_4.ConfigException(correlationId, "WRONG_PROTOCOL", "Protocol is not supported by REST connection")
+                    err = new pip_services_commons_node_5.ConfigException(correlationId, "WRONG_PROTOCOL", "Protocol is not supported by REST connection")
                         .withDetails("protocol", protocol);
                     // Check for host
                 }
                 else if (connection.getHost() == null) {
-                    err = new pip_services_commons_node_4.ConfigException(correlationId, "NO_HOST", "No host is configured in REST connection");
+                    err = new pip_services_commons_node_5.ConfigException(correlationId, "NO_HOST", "No host is configured in REST connection");
                     // Check for port
                 }
                 else if (connection.getPort() == 0) {
-                    err = new pip_services_commons_node_4.ConfigException(correlationId, "NO_PORT", "No port is configured in REST connection");
+                    err = new pip_services_commons_node_5.ConfigException(correlationId, "NO_PORT", "No port is configured in REST connection");
                 }
             }
             callback(err, connection);
@@ -142,14 +152,14 @@ class MainFacadeService extends FacadeService_1.FacadeService {
             let credential = con;
             // Check for connection
             if (credential == null) {
-                err = new pip_services_commons_node_4.ConfigException(correlationId, "NO_CREDENTIAL", "SSL certificates are not configured for HTTPS protocol");
+                err = new pip_services_commons_node_5.ConfigException(correlationId, "NO_CREDENTIAL", "SSL certificates are not configured for HTTPS protocol");
             }
             else {
                 if (credential.getAsNullableString('ssl_key_file') == null) {
-                    err = new pip_services_commons_node_4.ConfigException(correlationId, "NO_SSL_KEY_FILE", "SSL key file is not configured in credentials");
+                    err = new pip_services_commons_node_5.ConfigException(correlationId, "NO_SSL_KEY_FILE", "SSL key file is not configured in credentials");
                 }
                 else if (credential.getAsNullableString('ssl_crt_file') == null) {
-                    err = new pip_services_commons_node_4.ConfigException(correlationId, "NO_SSL_CRT_FILE", "SSL crt file is not configured in credentials");
+                    err = new pip_services_commons_node_5.ConfigException(correlationId, "NO_SSL_CRT_FILE", "SSL crt file is not configured in credentials");
                 }
             }
             callback(err, credential);

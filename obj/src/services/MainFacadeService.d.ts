@@ -10,6 +10,7 @@ export declare class MainFacadeService extends FacadeService implements IOpenabl
     private _http;
     private _connectionResolver;
     private _credentialResolver;
+    private _eventLogClient;
     private _debug;
     private _maintenance_enabled;
     private _maxSockets;

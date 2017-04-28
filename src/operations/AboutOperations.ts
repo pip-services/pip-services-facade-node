@@ -1,20 +1,32 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-let os = require('os');
-const pip_services_commons_node_1 = require("pip-services-commons-node");
-const pip_services_net_node_1 = require("pip-services-net-node");
-const FacadeRoutes_1 = require("./FacadeRoutes");
-class AboutRoutes extends FacadeRoutes_1.FacadeRoutes {
-    setReferences(references) {
+﻿let os = require('os');
+
+import { IReferences } from 'pip-services-commons-node';
+import { Descriptor } from 'pip-services-commons-node';
+import { ContainerInfo } from 'pip-services-container-node';
+import { HttpRequestDetector } from 'pip-services-net-node';
+
+import { FacadeOperations } from './FacadeOperations';
+
+export class AboutOperations extends FacadeOperations {
+    private _containerInfo: ContainerInfo;
+
+    public setReferences(references: IReferences): void {
         super.setReferences(references);
-        this._containerInfo = references.getOneOptional(new pip_services_commons_node_1.Descriptor('pip-services-container', 'container-info', '*', '*', '*'));
+
+        this._containerInfo = references.getOneOptional<ContainerInfo>(
+            new Descriptor('pip-services-container', 'container-info', '*', '*', '*')
+        );
     }
-    register() {
-        this.registerRoute('get', '/about', this.getAbout);
+
+    public getAboutCurl() {
+        return (req, res) => {
+            this.getAbout(req, res);
+        };
     }
-    getNetworkAddresses() {
+
+    private getNetworkAddresses(): string[] {
         let interfaces = os.networkInterfaces();
-        let addresses = [];
+        let addresses: string[] = [];
         for (let k in interfaces) {
             for (let k2 in interfaces[k]) {
                 let address = interfaces[k][k2];
@@ -25,7 +37,8 @@ class AboutRoutes extends FacadeRoutes_1.FacadeRoutes {
         }
         return addresses;
     }
-    getAbout(req, res) {
+
+    private getAbout(req, res) {
         let about = {
             server: {
                 name: this._containerInfo != null ? this._containerInfo.name : 'unknown',
@@ -33,22 +46,23 @@ class AboutRoutes extends FacadeRoutes_1.FacadeRoutes {
                 properties: this._containerInfo != null ? this._containerInfo.properties : null,
                 uptime: this._containerInfo != null ? this._containerInfo.uptime : null,
                 start_time: this._containerInfo != null ? this._containerInfo.startTime : null,
+
                 current_time: new Date().toISOString(),
                 protocol: req.protocol,
-                host: pip_services_net_node_1.HttpRequestDetector.detectServerHost(req),
+                host: HttpRequestDetector.detectServerHost(req),
                 addresses: this.getNetworkAddresses(),
-                port: pip_services_net_node_1.HttpRequestDetector.detectServerPort(req),
+                port: HttpRequestDetector.detectServerPort(req),
                 url: req.originalUrl,
             },
             client: {
-                address: pip_services_net_node_1.HttpRequestDetector.detectAddress(req),
-                client: pip_services_net_node_1.HttpRequestDetector.detectBrowser(req),
-                platform: pip_services_net_node_1.HttpRequestDetector.detectPlatform(req),
+                address: HttpRequestDetector.detectAddress(req),
+                client: HttpRequestDetector.detectBrowser(req),
+                platform: HttpRequestDetector.detectPlatform(req),
                 user: req.user
             }
         };
+
         res.json(about);
     }
+
 }
-exports.AboutRoutes = AboutRoutes;
-//# sourceMappingURL=AboutRoutes.js.map

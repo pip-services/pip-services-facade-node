@@ -26,8 +26,3 @@
 # Version 1 facade service
 - descriptor: "pip-services-facade:service:partition:v1.0:*"
   root_path: "/api/1.0"
-
-# /api/1.0/about route
-- descriptor: "pip-services-facade:routes:about:V1.0:*"
-  dependencies:
-    service: "pip-services-facade:service:partition:v1.0:*"

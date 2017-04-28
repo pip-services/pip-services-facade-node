@@ -7,15 +7,22 @@ let https = require('https');
 let connectTimeout = require('connect-timeout');
 let getoverride = require('get-methodoverride');
 let cors = require('cors');
+let os = require('os');
 
 import { ConfigParams } from 'pip-services-commons-node';
 import { IReferences } from 'pip-services-commons-node';
 import { IOpenable } from 'pip-services-commons-node';
+import { Descriptor } from 'pip-services-commons-node';
 import { ConnectionParams } from 'pip-services-commons-node';
 import { ConnectionResolver } from 'pip-services-commons-node';
 import { CredentialParams } from 'pip-services-commons-node';
 import { CredentialResolver } from 'pip-services-commons-node';
 import { ConfigException } from 'pip-services-commons-node';
+
+import { IEventLogClientV1 } from 'pip-clients-eventlog-node';
+import { SystemEventV1 } from 'pip-clients-eventlog-node';
+import { EventLogTypeV1 } from 'pip-clients-eventlog-node';
+import { EventLogSeverityV1 } from 'pip-clients-eventlog-node';
 
 import { FacadeService } from './FacadeService';
 
@@ -41,6 +48,7 @@ export class MainFacadeService extends FacadeService implements IOpenable {
     private _http: any;
     private _connectionResolver: ConnectionResolver = new ConnectionResolver();
     private _credentialResolver: CredentialResolver = new CredentialResolver();
+    private _eventLogClient: IEventLogClientV1;
 
     private _debug = true;
     private _maintenance_enabled = false;
@@ -50,6 +58,7 @@ export class MainFacadeService extends FacadeService implements IOpenable {
     public constructor() {
         super();
         this._rootPath = '';
+        this._dependencyResolver.put('eventlog', new Descriptor('pip-services-eventlog', 'client', '*', '*', '1.0'));
     }
 
     public isMaintenanceEnabled(): boolean {
@@ -65,7 +74,7 @@ export class MainFacadeService extends FacadeService implements IOpenable {
         this._connectionResolver.configure(config);
         this._credentialResolver.configure(config);
 
-        this._rootPath = config.getAsStringWithDefault('options.root_path', this._rootPath);
+        this._rootPath = config.getAsStringWithDefault('root_path', this._rootPath);
         if (this._rootPath.length > 0 && !this._rootPath.startsWith('/'))
                 this._rootPath = '/' + this._rootPath;
 
@@ -79,6 +88,7 @@ export class MainFacadeService extends FacadeService implements IOpenable {
         super.setReferences(references);
         this._connectionResolver.setReferences(references);
         this._credentialResolver.setReferences(references);
+        this._eventLogClient = this._dependencyResolver.getOneOptional<IEventLogClientV1>('eventlog');
     }
 
     public isOpened(): boolean {
@@ -112,13 +122,38 @@ export class MainFacadeService extends FacadeService implements IOpenable {
                 this._server = this.createServer();
                 this._http = this.createHttp(this._server, connection, credential);
 
+                let host = os.hostname();
                 let port = connection.getPort();
                 this._http.listen(port, (err) => {
                     if (err) {
                         this._http = null;
-                        this._logger.error(correlationId, err, 'Failed to start HTTP server on port %d', port);
+                        this._logger.error(correlationId, err, 'Failed to start HTTP server at %s:%d', host, port);
+
+                        if (this._eventLogClient) {
+                            this._eventLogClient.logEvent(
+                                correlationId,
+                                new SystemEventV1(
+                                    correlationId, host,
+                                    EventLogTypeV1.Failure, EventLogSeverityV1.Critical, 
+                                    "Failed to start client facade at " + host + ":" + port
+                                ),
+                                null
+                            );
+                        }
                     } else {
-                        this._logger.info(correlationId, 'Started HTTP server on port %d', port);
+                        this._logger.info(correlationId, 'Started HTTP server %s:%d', host, port);
+
+                        if (this._eventLogClient) {
+                            this._eventLogClient.logEvent(
+                                correlationId,
+                                new SystemEventV1(
+                                    correlationId, host,
+                                    EventLogTypeV1.Restart, EventLogSeverityV1.Informational, 
+                                    "Started client facade at " + host + ":" + port
+                                ),
+                                null
+                            );
+                        }
                     }
 
                     if (callback) callback(err);
@@ -128,19 +163,16 @@ export class MainFacadeService extends FacadeService implements IOpenable {
     }
 
     public close(correlationId: string, callback?: (err: any) => void): void {
-        // Exit if already closed
-        if (this._http == null) {
-            if (callback) callback(null);
-            return;
+        if (this._http != null) {
+            this._http.close((err) => {
+                this._logger.info(correlationId, 'Closed HTTP server');
+            });
         }
 
-        this._http.close((err) => {
-            this._http = null;
-            this._server = null;
-            this._logger.info(correlationId, 'Closed HTTP server');
-            
-            if (callback) callback(null);
-        });
+        this._http = null;
+        this._server = null;
+
+        if (callback) callback(null);
     }
 
 	protected getConnection(correlationId: string, callback: (err: any, result: ConnectionParams) => void): void {
