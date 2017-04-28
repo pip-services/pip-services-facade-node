@@ -9,7 +9,7 @@ class AboutOperations extends FacadeOperations_1.FacadeOperations {
         super.setReferences(references);
         this._containerInfo = references.getOneOptional(new pip_services_commons_node_1.Descriptor('pip-services-container', 'container-info', '*', '*', '*'));
     }
-    getAboutCurl() {
+    getAboutOperation() {
         return (req, res) => {
             this.getAbout(req, res);
         };

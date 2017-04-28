@@ -1,6 +1,6 @@
 {
     "name": "pip-services-facade-node",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "author": "Conceptual Vision Consulting LLC",
     "description": "RESTful Client Facade for Pip.Services in Node.js",
     "contributors": [

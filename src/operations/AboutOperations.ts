@@ -18,7 +18,7 @@ export class AboutOperations extends FacadeOperations {
         );
     }
 
-    public getAboutCurl() {
+    public getAboutOperation() {
         return (req, res) => {
             this.getAbout(req, res);
         };

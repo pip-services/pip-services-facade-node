@@ -3,7 +3,7 @@ import { FacadeOperations } from './FacadeOperations';
 export declare class AboutOperations extends FacadeOperations {
     private _containerInfo;
     setReferences(references: IReferences): void;
-    getAboutCurl(): (req: any, res: any) => void;
+    getAboutOperation(): (req: any, res: any) => void;
     private getNetworkAddresses();
     private getAbout(req, res);
 }
