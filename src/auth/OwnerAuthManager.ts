@@ -16,7 +16,7 @@ export class OwnerAuthManager {
                     )
                 );
             } else {
-                let userId = req.param(idParam);
+                let userId = req.route.params[idParam] || req.param(idParam);
                 if (req.user_id != userId) {
                     HttpResponseSender.sendError(
                         req, res,
@@ -43,7 +43,7 @@ export class OwnerAuthManager {
                     )
                 );
             } else {
-                let userId = req.param(idParam);
+                let userId = req.route.params[idParam] || req.param(idParam);
                 let roles = req.user != null ? req.user.roles : null;
                 let admin = _.includes(roles, 'admin');
                 if (req.user_id != userId && !admin) {
