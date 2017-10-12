@@ -4,7 +4,7 @@ let _ = require('lodash');
 const pip_services_commons_node_1 = require("pip-services-commons-node");
 const pip_services_net_node_1 = require("pip-services-net-node");
 class OwnerAuthManager {
-    owner(idParam) {
+    owner(idParam = 'user_id') {
         return (req, res, next) => {
             if (req.user == null) {
                 pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation'));
@@ -20,7 +20,7 @@ class OwnerAuthManager {
             }
         };
     }
-    ownerOrAdmin(idParam) {
+    ownerOrAdmin(idParam = 'user_id') {
         return (req, res, next) => {
             if (req.user == null) {
                 pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation'));

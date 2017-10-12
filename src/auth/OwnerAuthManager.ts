@@ -5,7 +5,7 @@ import { HttpResponseSender } from 'pip-services-net-node';
 
 export class OwnerAuthManager {
 
-    public owner(idParam: string): (req: any, res: any, next: () => void) => void {
+    public owner(idParam: string = 'user_id'): (req: any, res: any, next: () => void) => void {
         return (req, res, next) => {
             if (req.user == null) {
                 HttpResponseSender.sendError(
@@ -32,7 +32,7 @@ export class OwnerAuthManager {
         };
     }
 
-    public ownerOrAdmin(idParam: string): (req: any, res: any, next: () => void) => void {
+    public ownerOrAdmin(idParam: string = 'user_id'): (req: any, res: any, next: () => void) => void {
         return (req, res, next) => {
             if (req.user == null) {
                 HttpResponseSender.sendError(

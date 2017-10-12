@@ -1,6 +1,6 @@
 {
     "name": "pip-services-facade-node",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "author": "Conceptual Vision Consulting LLC",
     "description": "RESTful Client Facade for Pip.Services in Node.js",
     "contributors": [
@@ -12,12 +12,12 @@
     "main": "./obj/src/index.js",
     "typings": "./obj/src/index.d.ts",
     "keywords": [
-        "pip.services", 
+        "pip.services",
         "rest api",
         "client facade"
     ],
     "noAnalyze": true,
-    "repository" : {
+    "repository": {
         "type": "git",
         "url": "ssh://git@github.com:pip-services/pip-services-facade-node.git"
     },
@@ -32,8 +32,8 @@
         "benchmark": "matcha -R clean -I tdd ./benchmark/run.js"
     },
     "dependencies": {
-        "pip-services-commons-node": "^2.0.0",
-        "pip-services-container-node": "^2.0.0",
+        "pip-services-commons-node": "^2.7.0",
+        "pip-services-container-node": "^2.2.0",
         "pip-services-net-node": "^2.0.0",
         "pip-clients-eventlog-node": "git+ssh://git@github.com:pip-services-infrastructure/pip-clients-eventlog-node.git",
         "express": "3.4.6",

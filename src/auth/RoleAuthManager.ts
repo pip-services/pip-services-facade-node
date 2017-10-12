@@ -5,7 +5,7 @@ import { HttpResponseSender } from 'pip-services-net-node';
 
 export class RoleAuthManager {
 
-    public userInRole(role: string): (req: any, res: any, next: () => void) => void {
+    public userInRoles(roles: string[]): (req: any, res: any, next: () => void) => void {
         return (req, res, next) => {
             let user = req.user;
             if (user == null) {
@@ -17,15 +17,18 @@ export class RoleAuthManager {
                     )
                 );
             } else {
-                let authorized = _.includes(user.roles, role);
+                let authorized = false;
+                
+                for (let role of roles)
+                    authorized = authorized || _.includes(user.roles, role);
 
                 if (!authorized) {
                     HttpResponseSender.sendError(
                         req, res,
                         new UnauthorizedException(
                             null, 'NOT_IN_ROLE',
-                            'User must be ' + role + ' to perform this operation'
-                        ).withDetails('role', role)
+                            'User must be ' + roles.join(' or ') + ' to perform this operation'
+                        ).withDetails('roles', roles)
                     );
                 } else {
                     next();
@@ -34,6 +37,10 @@ export class RoleAuthManager {
         };
     }
 
+    public userInRole(role: string): (req: any, res: any, next: () => void) => void {
+        return this.userInRoles([role]);
+    }
+        
     public admin(): (req: any, res: any, next: () => void) => void {
         return this.userInRole('admin');
     }
