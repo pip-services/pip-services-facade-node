@@ -19,7 +19,7 @@ export class BasicAuthManager {
                     new UnauthorizedException(
                         null, 'NOT_SIGNED',
                         'User must be signed in to perform this operation'
-                    )
+                    ).withStatus(401)
                 );
             } else {
                 next();

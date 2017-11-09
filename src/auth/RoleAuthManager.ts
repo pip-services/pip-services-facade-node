@@ -14,7 +14,7 @@ export class RoleAuthManager {
                     new UnauthorizedException(
                         null, 'NOT_SIGNED',
                         'User must be signed in to perform this operation'
-                    )
+                    ).withStatus(401)
                 );
             } else {
                 let authorized = false;
@@ -28,7 +28,7 @@ export class RoleAuthManager {
                         new UnauthorizedException(
                             null, 'NOT_IN_ROLE',
                             'User must be ' + roles.join(' or ') + ' to perform this operation'
-                        ).withDetails('roles', roles)
+                        ).withDetails('roles', roles).withStatus(403)
                     );
                 } else {
                     next();

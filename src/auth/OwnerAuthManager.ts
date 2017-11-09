@@ -13,7 +13,7 @@ export class OwnerAuthManager {
                     new UnauthorizedException(
                         null, 'NOT_SIGNED',
                         'User must be signed in to perform this operation'
-                    )
+                    ).withStatus(401)
                 );
             } else {
                 let userId = req.route.params[idParam] || req.param(idParam);
@@ -21,9 +21,9 @@ export class OwnerAuthManager {
                     HttpResponseSender.sendError(
                         req, res,
                         new UnauthorizedException(
-                            null, 'UNAUTHORIZED',
+                            null, 'FORBIDDEN',
                             'Only data owner can perform this operation'
-                        )
+                        ).withStatus(403)
                     );
                 } else {
                     next();
@@ -40,7 +40,7 @@ export class OwnerAuthManager {
                     new UnauthorizedException(
                         null, 'NOT_SIGNED',
                         'User must be signed in to perform this operation'
-                    )
+                    ).withStatus(401)
                 );
             } else {
                 let userId = req.route.params[idParam] || req.param(idParam);
@@ -50,9 +50,9 @@ export class OwnerAuthManager {
                     HttpResponseSender.sendError(
                         req, res,
                         new UnauthorizedException(
-                            null, 'UNAUTHORIZED',
+                            null, 'FORBIDDEN',
                             'Only data owner can perform this operation'
-                        )
+                        ).withStatus(403)
                     );
                 } else {
                     next();

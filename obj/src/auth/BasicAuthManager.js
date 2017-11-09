@@ -12,7 +12,7 @@ class BasicAuthManager {
     signed() {
         return (req, res, next) => {
             if (req.user == null) {
-                pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation'));
+                pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation').withStatus(401));
             }
             else {
                 next();

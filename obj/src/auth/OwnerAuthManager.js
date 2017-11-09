@@ -7,12 +7,12 @@ class OwnerAuthManager {
     owner(idParam = 'user_id') {
         return (req, res, next) => {
             if (req.user == null) {
-                pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation'));
+                pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation').withStatus(401));
             }
             else {
                 let userId = req.route.params[idParam] || req.param(idParam);
                 if (req.user_id != userId) {
-                    pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'UNAUTHORIZED', 'Only data owner can perform this operation'));
+                    pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'FORBIDDEN', 'Only data owner can perform this operation').withStatus(403));
                 }
                 else {
                     next();
@@ -23,14 +23,14 @@ class OwnerAuthManager {
     ownerOrAdmin(idParam = 'user_id') {
         return (req, res, next) => {
             if (req.user == null) {
-                pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation'));
+                pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'NOT_SIGNED', 'User must be signed in to perform this operation').withStatus(401));
             }
             else {
                 let userId = req.route.params[idParam] || req.param(idParam);
                 let roles = req.user != null ? req.user.roles : null;
                 let admin = _.includes(roles, 'admin');
                 if (req.user_id != userId && !admin) {
-                    pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'UNAUTHORIZED', 'Only data owner can perform this operation'));
+                    pip_services_net_node_1.HttpResponseSender.sendError(req, res, new pip_services_commons_node_1.UnauthorizedException(null, 'FORBIDDEN', 'Only data owner can perform this operation').withStatus(403));
                 }
                 else {
                     next();
